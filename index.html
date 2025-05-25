@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NutriGain</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d0d0d;
+      color: #e6ffe6;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #006400;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3rem;
+      color: #ccffcc;
+    }
+    header p {
+      margin: 5px 0 0;
+      font-style: italic;
+      color: #99ff99;
+    }
+    nav {
+      background-color: #1a1a1a;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    nav a {
+      color: #b3ffb3;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #00cc00;
+    }
+    main {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .product-card {
+      background-color: #1a1a1a;
+      border: 2px solid #006400;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 15px;
+      text-align: center;
+    }
+    .product-info h3 {
+      margin: 0;
+      color: #66ff66;
+    }
+    .product-info p {
+      font-weight: bold;
+      color: #00e600;
+    }
+    .product-info button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #00cc00;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .product-info button:hover {
+      background-color: #009900;
+    }
+
+    /* Botón flotante del carrito */
+    #cart-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #00cc00;
+      border: none;
+      color: black;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      z-index: 100;
+    }
+
+    #cart-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background-color: #1a1a1a;
+      color: #e6ffe6;
+      border: 2px solid #00cc00;
+      border-radius: 10px;
+      padding: 15px;
+      max-width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: none;
+      z-index: 99;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .cart-item span {
+      color: #00ff00;
+      font-weight: bold;
+    }
+    .cart-item button {
+      background: none;
+      border: none;
+      color: #ff3333;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .cart-total {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #66ff66;
+    }
+
+    @media (max-width: 768px) {
+      .productos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .productos {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NutriGain</h1>
+    <p>Crea la fuerza que necesitas</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="registro.html" target="_blank">Registrarse</a>
+  </nav>
+
+  <main>
+    <section class="productos" id="product-list"></section>
+  </main>
+
+  <!-- Botón del carrito flotante -->
+  <button id="cart-button">🛒</button>
+
+  <!-- Contenedor del carrito flotante -->
+  <div id="cart-container">
+    <h3>Carrito</h3>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total">Total: $0.00</div>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Proteína Whey", price: 799, image: "proteina.jpg" },
+      { name: "Creatina", price: 450, image: "creatina.jpg" },
+      { name: "BCAA", price: 599, image: "bbca.jpg" },
+      { name: "Pre-Entreno", price: 350, image: "pre.jpg" },
+      { name: "Glutamina", price: 400, image: "glutamina.jpg" },
+      { name: "Multivitamínico", price: 250, image: "multivitamínico.jpg" },
+      { name: "Omega 3", price: 300, image: "omega3.jpg" },
+      { name: "Fat Burner", price: 499, image: "fatburner.jpg" },
+      { name: "Barra Proteica", price: 199, image: "barra proteica.jpg" },
+      { name: "Colágeno", price: 350, image: "colageno.jpg" },
+      { name: "Caseína", price: 650, image: "caseina.jpg" },
+      { name: "Batido Vegano", price: 600, image: "batido vegano.jpg" }
+    ];
+
+    const productList = document.getElementById('product-list');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalDisplay = document.getElementById('cart-total');
+    const cartContainer = document.getElementById('cart-container');
+    const cartButton = document.getElementById('cart-button');
+    let cart = [];
+
+    function renderProducts() {
+      productList.innerHTML = '';
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p>$${product.price.toFixed(2)}</p>
+            <button onclick='addToCart(${JSON.stringify(product)})'>Agregar</button>
+          </div>
+        `;
+        productList.appendChild(card);
+      });
+    }
+
+    function updateCartUI() {
+      cartItemsContainer.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p>Carrito vacío.</p>';
+        cartTotalDisplay.textContent = 'Total: $0.00';
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div>${item.name} x${item.quantity} <span>$${(item.price * item.quantity).toFixed(2)}</span></div>
+          <button onclick="removeFromCart(${index})">✖</button>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+      cartTotalDisplay.textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    function addToCart(product) {
+      if (localStorage.getItem('registrado') !== 'true') {
+        alert('Debes registrarte para agregar productos.');
+        window.open('registro.html', '_blank');
+        return;
+      }
+
+      const existing = cart.find(p => p.name === product.name);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    cartButton.addEventListener('click', () => {
+      cartContainer.style.display = cartContainer.style.display === 'none' ? 'block' : 'none';
+    });
+
+    renderProducts();
+    updateCartUI();
+  </script>
+</body>
+</html>

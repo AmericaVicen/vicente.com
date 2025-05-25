@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - NutriGain</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1598970434795-0c54fe7c0642?auto=format&fit=crop&w=1400&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      backdrop-filter: blur(5px);
+    }
+
+    .form-wrapper {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 40px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(158, 240, 26, 0.4);
+    }
+
+    .form-wrapper h2 {
+      text-align: center;
+      color: #9ef01a;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+      font-size: 1.8rem;
+    }
+
+    .form-wrapper p {
+      text-align: center;
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+
+    label {
+      color: #f0f0f0;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 2px solid #333;
+      background-color: #222;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #9ef01a;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #9ef01a;
+      color: #000;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #caff70;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>Registro NutriGain</h2>
+    <p>Crea la fuerza que necesitas</p>
+    <form id="registroForm">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" required minlength="6" />
+
+      <input type="submit" value="Crear cuenta" />
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('registroForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      localStorage.setItem('registrado', 'true');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
